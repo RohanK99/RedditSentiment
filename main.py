@@ -8,6 +8,7 @@ import re
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import requests
 
 indicoio.config.api_key = "150f3aff97a4936f8f0a8cd858345b9e"
 reddit = praw.Reddit(client_id='L92JRMl9lgC4sA',
@@ -18,7 +19,7 @@ reddit = praw.Reddit(client_id='L92JRMl9lgC4sA',
 
 subreddit = reddit.subreddit('food')
 
-hot_posts = subreddit.hot(limit=25)
+hot_posts = subreddit.hot(limit=70)
 submissionUrls = dict()
 
 file = open("text.txt", "w")
@@ -34,13 +35,13 @@ for submission in hot_posts:
         counter = 0
         for comment in comments:
             counter += 1
-            if counter > 4:
+            if counter > 5:
                 break
             # print(comment.body)
             if hasattr(comment, 'body'):
-                comment = (comment.body)
+                comment = comment.body
                 comment = re.sub(r'[^\x00-\x7F]+', ' ', comment)
-                file.write(((comment) + " " + "\n"))
+                file.write((comment + " " + "\n"))
         file.write(str(submission))
         file.write("\n")
 
@@ -120,7 +121,7 @@ for key in submissionUrls:
 
 for key in objectSent:
     objectSent[key] = objectSent[key] / objectOccur[key]
-    if objectOccur[key] > 2:
+    if objectOccur[key] > 6:
         print("key: ", key, objectSent[key])
 
 # graph input x into x and y into y based on collected data
@@ -128,7 +129,7 @@ x = list()
 y = list()
 
 for key in objectSent:
-    if objectOccur[key] > 2:
+    if objectOccur[key] > 6:
         x.append(key)
         y.append(objectSent[key])
 
